@@ -1,0 +1,20 @@
+#Restructure the data to a new dataframe called textMessages that is in long format. 
+#Use the factor() command to convert the ‘Time’ variable to a factor with levels called ‘Baseline’ and ‘6 Months’.
+
+textData$id = row(textData[1])
+
+textMessages<-melt(textData, id = c("id", "Group"), measured = c("Baseline", "Six_months"))
+names(textMessages)<-c("id", "Group", "Time", "Grammar_Score")
+
+textMessages$Time<-factor(textMessages$Time, labels = c("Baseline", "6 Months"))
+
+line <- ggplot(textMessages, aes(Time, Grammar_Score, colour = Group))
+line + stat_summary(fun.y = mean, geom = "point", aes(shape = Group), size = 4) +
+stat_summary(fun.y = mean, geom = "line", aes(group= Group, linetype = Group)) +
+stat_summary(fun.data = mean_cl_boot, geom = "errorbar", width = 0.2) + 
+labs(x = "Time", y = "Mean Grammar Score", colour = "Group")
+
+stat_summary(fun.y = mean, geom = "point", aes(shape = Group))
+
+stat_summary(fun.y = mean, geom = "line", aes(group= Group, linetype = Group))
+
